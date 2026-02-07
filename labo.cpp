@@ -27,9 +27,19 @@ nuevo->nombre[i] = nom[i];
 }
 // TODO: Implementar estas funciones
 // 1. Insertar un estudiante en el árbol (ordenado por carnet)
+
 Estudiante* insertar(Estudiante* raiz, int carnet, char nombre[], float nota) {
- // Tu código aquí
+    if (raiz == NULL)
+        return crearEstudiante(carnet, nombre, nota);
+
+    if (carnet < raiz->carnet)
+        raiz->izquierdo = insertar(raiz->izquierdo, carnet, nombre, nota);
+    else if (carnet > raiz->carnet)
+        raiz->derecho = insertar(raiz->derecho, carnet, nombre, nota);
+
+    return raiz;
 }
+
 // 2. Mostrar todos los estudiantes en orden de carnet
 void mostrarEstudiantes(Estudiante* raiz) {
  // Tu código aquí
