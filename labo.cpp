@@ -1,13 +1,14 @@
 #include <iostream>
 using namespace std;
-struct Estudiante
-{
+
+struct Estudiante {
     int carnet;
     char nombre[50];
     float nota;
-    Estudiante *izquierdo;
-    Estudiante *derecho;
+    Estudiante* izquierdo;
+    Estudiante* derecho;
 };
+
 // Función para crear un nuevo estudiante
 Estudiante *crearEstudiante(int carnet, char nom[], float nota)
 {
@@ -17,6 +18,8 @@ Estudiante *crearEstudiante(int carnet, char nom[], float nota)
     nuevo->izquierdo = NULL;
     nuevo->derecho = NULL;
 
+    int i = 0;
+    while (nom[i] != '\0' && i < 49) {
     // Copiar el nombre
     int i = 0;
     while (nom[i] != '\0' && i < 49)
@@ -44,16 +47,19 @@ Estudiante *insertar(Estudiante *raiz, int carnet, char nombre[], float nota)
     return raiz;
 }
 
+
 // 2. Mostrar todos los estudiantes en orden de carnet
 void mostrarEstudiantes(Estudiante *raiz)
 {
     if (raiz != NULL)
     {
+
         mostrarEstudiantes(raiz->izquierdo);
         cout << raiz->carnet << " - " << raiz->nombre << " - " << raiz->nota << endl;
         mostrarEstudiantes(raiz->derecho);
     }
 }
+
 
 // 3. Buscar un estudiante por carnet y mostrar sus datos
 void buscarEstudiante(Estudiante *raiz, int carnet)
@@ -72,6 +78,7 @@ void buscarEstudiante(Estudiante *raiz, int carnet)
         buscarEstudiante(raiz->derecho, carnet);
 }
 
+
 // 4. Mostrar estudiantes aprobados (nota >= 6.0)
 void mostrarAprobados(Estudiante *raiz)
 {
@@ -83,21 +90,48 @@ void mostrarAprobados(Estudiante *raiz)
         mostrarAprobados(raiz->derecho);
     }
 }
-// 5. Mostrar estudiantes reprobados (nota < 6.0)
-void mostrarReprobados(Estudiante *raiz)
-{
-    // Tu código aquí
+
+// 5. Mostrar estudiantes reprobados
+void mostrarReprobados(Estudiante* raiz) {
+    if (raiz != NULL) {
+        mostrarReprobados(raiz->izquierdo);
+        if (raiz->nota < 6.0)
+            cout << raiz->carnet << " - " << raiz->nombre << " - " << raiz->nota << endl;
+        mostrarReprobados(raiz->derecho);
+    }
 }
-float calcularPromedio(Estudiante *raiz, int *contador)
-{
-    // Tu código aquí
-    // Usa el contador para saber cuántos estudiantes hay
+
+// 6. Calcular el promedio
+float calcularPromedio(Estudiante* raiz, int* contador) {
+    if (raiz == NULL)
+        return 0;
+
+    float suma = raiz->nota;
+    (*contador)++;
+
+    suma += calcularPromedio(raiz->izquierdo, contador);
+    suma += calcularPromedio(raiz->derecho, contador);
+
+    return suma;
 }
-// 7. Encontrar al estudiante con la nota más alta
-Estudiante *encontrarMejorNota(Estudiante *raiz)
-{
-    // Tu código aquí
+
+// 7. Estudiante con mejor nota
+Estudiante* encontrarMejorNota(Estudiante* raiz) {
+    if (raiz == NULL)
+        return NULL;
+
+    Estudiante* mejor = raiz;
+    Estudiante* izq = encontrarMejorNota(raiz->izquierdo);
+    Estudiante* der = encontrarMejorNota(raiz->derecho);
+
+    if (izq != NULL && izq->nota > mejor->nota)
+        mejor = izq;
+    if (der != NULL && der->nota > mejor->nota)
+        mejor = der;
+
+    return mejor;
 }
+
 int main()
 {
     Estudiante *sistema = NULL;
@@ -116,8 +150,59 @@ int main()
         cout << "8. Salir\n";
         cout << "Opcion: ";
         cin >> opcion;
+        int carnet;
+        char nombre[50];
+        float nota;
 
-        // Implementa el switch con las opciones
+        switch (opcion) {
+            case 1:
+                cout << "Carnet: ";
+                cin >> carnet;
+                cout << "Nombre: ";
+                cin >> nombre;
+                cout << "Nota: ";
+                cin >> nota;
+                sistema = insertar(sistema, carnet, nombre, nota);
+                break;
+
+            case 2:
+                mostrarEstudiantes(sistema);
+                break;
+
+            case 3:
+                cout << "Carnet a buscar: ";
+                cin >> carnet;
+                buscarEstudiante(sistema, carnet);
+                break;
+
+            case 4:
+                mostrarAprobados(sistema);
+                break;
+
+            case 5:
+                mostrarReprobados(sistema);
+                break;
+
+            case 6: {
+                int contador = 0;
+                float suma = calcularPromedio(sistema, &contador);
+                if (contador > 0)
+                    cout << "Promedio: " << suma / contador << endl;
+                else
+                    cout << "No hay estudiantes\n";
+                break;
+            }
+
+            case 7: {
+                Estudiante* mejor = encontrarMejorNota(sistema);
+                if (mejor != NULL)
+                    cout << mejor->carnet << " - " << mejor->nombre << " - " << mejor->nota << endl;
+                else
+                    cout << "No hay estudiantes\n";
+                break;
+            }
+        }
+
 
     } while (opcion != 8);
 
