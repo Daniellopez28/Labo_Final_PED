@@ -9,9 +9,10 @@ struct Estudiante {
     Estudiante* derecho;
 };
 
-
-Estudiante* crearEstudiante(int carnet, char nom[], float nota) {
-    Estudiante* nuevo = new Estudiante();
+// Función para crear un nuevo estudiante
+Estudiante *crearEstudiante(int carnet, char nom[], float nota)
+{
+    Estudiante *nuevo = new Estudiante();
     nuevo->carnet = carnet;
     nuevo->nota = nota;
     nuevo->izquierdo = NULL;
@@ -19,6 +20,10 @@ Estudiante* crearEstudiante(int carnet, char nom[], float nota) {
 
     int i = 0;
     while (nom[i] != '\0' && i < 49) {
+    // Copiar el nombre
+    int i = 0;
+    while (nom[i] != '\0' && i < 49)
+    {
         nuevo->nombre[i] = nom[i];
         i++;
     }
@@ -26,10 +31,11 @@ Estudiante* crearEstudiante(int carnet, char nom[], float nota) {
 
     return nuevo;
 }
+// TODO: Implementar estas funciones
+// 1. Insertar un estudiante en el árbol (ordenado por carnet)
 
-
-// 1. Insertar un estudiante en el árbol
-Estudiante* insertar(Estudiante* raiz, int carnet, char nombre[], float nota) {
+Estudiante *insertar(Estudiante *raiz, int carnet, char nombre[], float nota)
+{
     if (raiz == NULL)
         return crearEstudiante(carnet, nombre, nota);
 
@@ -40,18 +46,26 @@ Estudiante* insertar(Estudiante* raiz, int carnet, char nombre[], float nota) {
 
     return raiz;
 }
+
+
 // 2. Mostrar todos los estudiantes en orden de carnet
-void mostrarEstudiantes(Estudiante* raiz) {
-    if (raiz != NULL) {
+void mostrarEstudiantes(Estudiante *raiz)
+{
+    if (raiz != NULL)
+    {
+
         mostrarEstudiantes(raiz->izquierdo);
         cout << raiz->carnet << " - " << raiz->nombre << " - " << raiz->nota << endl;
         mostrarEstudiantes(raiz->derecho);
     }
 }
 
-// 3. Buscar un estudiante por carnet
-void buscarEstudiante(Estudiante* raiz, int carnet) {
-    if (raiz == NULL) {
+
+// 3. Buscar un estudiante por carnet y mostrar sus datos
+void buscarEstudiante(Estudiante *raiz, int carnet)
+{
+    if (raiz == NULL)
+    {
         cout << "Estudiante no encontrado\n";
         return;
     }
@@ -63,9 +77,13 @@ void buscarEstudiante(Estudiante* raiz, int carnet) {
     else
         buscarEstudiante(raiz->derecho, carnet);
 }
-// 4. Mostrar estudiantes aprobados
-void mostrarAprobados(Estudiante* raiz) {
-    if (raiz != NULL) {
+
+
+// 4. Mostrar estudiantes aprobados (nota >= 6.0)
+void mostrarAprobados(Estudiante *raiz)
+{
+    if (raiz != NULL)
+    {
         mostrarAprobados(raiz->izquierdo);
         if (raiz->nota >= 6.0)
             cout << raiz->carnet << " - " << raiz->nombre << " - " << raiz->nota << endl;
@@ -114,12 +132,14 @@ Estudiante* encontrarMejorNota(Estudiante* raiz) {
     return mejor;
 }
 
-int main() {
-    Estudiante* sistema = NULL;
+int main()
+{
+    Estudiante *sistema = NULL;
     int opcion;
 
-    do {
-        cout << "\n===== SISTEMA DE GESTION DE ESTUDIANTES =====\n";
+    do
+    {
+        cout << "\n===== SISTEMA DE GESTION DE ESTUDIANTES=====\n";
         cout << "1. Agregar estudiante\n";
         cout << "2. Mostrar todos los estudiantes\n";
         cout << "3. Buscar estudiante por carnet\n";
@@ -130,7 +150,6 @@ int main() {
         cout << "8. Salir\n";
         cout << "Opcion: ";
         cin >> opcion;
-
         int carnet;
         char nombre[50];
         float nota;
@@ -183,6 +202,7 @@ int main() {
                 break;
             }
         }
+
 
     } while (opcion != 8);
 
